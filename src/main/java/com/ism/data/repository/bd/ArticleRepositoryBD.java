@@ -122,30 +122,6 @@ public class ArticleRepositoryBD extends RepositoryBDImpl<Article> implements Ar
             return false;
         }
     }
-
-    // @Override
-    // public boolean updateArticle(Article article) {
-    //     String query = String.format("UPDATE %s SET libelle = ?, prix = ?, qte_stock = ? WHERE id = ?", this.tableName);
-    //     try {
-    //         if (connexion() != null) {
-    //             PreparedStatement ps = connexion().prepareStatement(query);
-
-    //         ps.setString(1, article.getLibelle());
-    //         ps.setDouble(2, article.getPrix());
-    //         ps.setDouble(3, article.getQteStock());
-    //         ps.setInt(4, article.getId());
-
-    //         int affectedRows = ps.executeUpdate();
-    //         return affectedRows > 0;
-
-    //         } else {
-    //             System.out.println("Erreur de connexion à la base de données.");
-    //         }
-    //     } catch (SQLException e) {
-    //         System.out.println("Erreur lors de l'exécution de la requête : " + e.getMessage());
-    //     }
-    //     return false;
-    // }
     
     @Override
     public void remove(Article article) {

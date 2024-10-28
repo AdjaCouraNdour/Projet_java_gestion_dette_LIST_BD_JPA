@@ -27,7 +27,8 @@ public class UserView extends ViewImpl<User>  {
     public User create() {
         User user=new User();
         System.out.println("1-pour un client existant");
-        System.out.println("2-pour un nouveau client ");
+        System.out.println("2-nouveau User ");
+
         if (choiceToContinue()==1) {
             Client clientChoisi=clientView.askClient();
             System.out.println("Client récupéré: " + clientChoisi);
@@ -38,16 +39,16 @@ public class UserView extends ViewImpl<User>  {
                     user=createUser();
                     clientChoisi.setUser(user);
                     user.setClient(clientChoisi);
-                    return user;
                 }else{
                     System.out.println("ce client a deja un compte");
-                    return null;
                 }  
             } 
+            return user;
+
         } else {
             Client cl= clientView.create();
             clientService.save(cl);
-            user=createUser();
+            user=createUserWithChoice();
             cl.setUser(user);
             user.setClient(cl);
             return user; 
@@ -113,7 +114,18 @@ public class UserView extends ViewImpl<User>  {
         return UserRole.values()[choix - 1];
     }
 
-    private User createUser(){
+    public User createUser(){
+        User user =new User();
+        user.isActif();
+        scanner.nextLine();
+        user.setEmail(saisieEmail());
+        user.setLogin(saisieLogin());
+        user.setPassword(saisiePassWord()); 
+        user.setUserRole(UserRole.Client);
+        return user;
+    }
+
+    public User createUserWithChoice(){
         User user =new User();
         user.isActif();
         scanner.nextLine();
@@ -121,15 +133,15 @@ public class UserView extends ViewImpl<User>  {
         user.setLogin(saisieLogin());
         user.setPassword(saisiePassWord()); 
         System.out.println("voulez vous lui ajouter un role");
-            if (askToContinue()==1) {
-                user.setUserRole(saisieRoleCompte());
-            }else{
-                return user;
-            }
+        if (askToContinue()==1) {
+            user.setUserRole(saisieRoleCompte());
+        }else{
+            return user;
+        }
         return user;
     }
 
-
+   
     public String saisieLogin() {
         String login = "";
         boolean isValid = false;

@@ -1,7 +1,7 @@
 package com.ism.data.entities;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-// import lombok.ToString;
+import lombok.ToString;
 import jakarta.persistence.*;
 
 @Data
@@ -13,15 +13,8 @@ import jakarta.persistence.*;
 public class Details extends AbstractEntity implements Identifiable  {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Transient
-    private static int cpt = 1 ;
-
-    public Details() {
-        this.id = cpt++; 
-    }
 
     private double qteDette;
 

@@ -3,24 +3,34 @@ package com.ism.data.repository.jpa;
 import com.ism.core.Repository.RepositoryJPA;
 import com.ism.data.entities.Client;
 import com.ism.data.repository.interfaces.ClientRepositoryI;
-import com.ism.data.repository.interfaces.UserRepositoryI;
-import jakarta.persistence.*;
+
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
 public class ClientRepositoryJPA extends RepositoryJPA<Client> implements ClientRepositoryI {
 
-    UserRepositoryI userRepository;
 
-    public ClientRepositoryJPA(EntityManager em, Class<Client> type, UserRepositoryI userRepository) {
-        super(em, type);
-        this.userRepository = userRepository;
-        this.tableName = "\"client\""; // Proper quoting for PostgreSQL if table name is lowercase
+    public ClientRepositoryJPA( Class<Client> type) {
+        super(type);
     }
+
+    @Override
+    public boolean insert(Client object) {
+        try {
+            super.insert(object); 
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace(); 
+            return false;
+        }
+    }
+
 
     @Override
     public Client selectById(int id) {
         Client client = null;
         try {
-            client = em.find(Client.class, id); // Recherche par ID
+            client = em.find(Client.class, id); 
             if (client == null) {
                 System.out.println("Aucun client trouvé avec l'ID : " + id);
             }
@@ -35,9 +45,9 @@ public class ClientRepositoryJPA extends RepositoryJPA<Client> implements Client
         Client client = null;
         try {
             TypedQuery<Client> query = em.createQuery(
-                String.format("SELECT c FROM %s c WHERE c.telephone = :numero", this.tableName),
+                String.format("SELECT c FROM Client c WHERE c.telephone = :numero"),
                 Client.class);
-            query.setParameter("numero", numero); // Correspondance correcte du nom du paramètre
+            query.setParameter("numero", numero); 
             client = query.getSingleResult();
         } catch (NoResultException e) {
             System.out.println("Aucun client trouvé avec le numéro : " + numero);
@@ -46,6 +56,4 @@ public class ClientRepositoryJPA extends RepositoryJPA<Client> implements Client
         }
         return client;
     }
-
- 
 }

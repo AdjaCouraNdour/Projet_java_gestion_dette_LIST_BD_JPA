@@ -14,17 +14,6 @@ import lombok.EqualsAndHashCode;
 
 public class Client extends AbstractEntity implements Identifiable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    
-    @Transient
-    private static int cpt = 1 ;
-
-    public Client() {
-        this.id = cpt++; 
-    }
-
     @Column(length = 20,unique = true)
     private String prenom;
 
@@ -37,7 +26,7 @@ public class Client extends AbstractEntity implements Identifiable {
     @Column(length = 255,unique = true)
     private String address;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade ={CascadeType.PERSIST , CascadeType.MERGE })
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
@@ -49,16 +38,13 @@ public class Client extends AbstractEntity implements Identifiable {
         dette.setClient(this); 
         listeDette.add(dette);
     }
-    
+
 
     @Override
     public String toString() {
-        return "Client{" +
-               "id=" + getId() + // Ajout de l'ID ici
-               ", prenom='" + prenom + '\'' +
-               ", nom ='" + nom + '\'' +
-               ", telephone='" + telephone + '\'' +
-               ", address='" + address + '\'' +
-               '}';
+        return "Client [" +"id="+ id + ",prenom=" + prenom + ", nom=" + nom + ", telephone=" + telephone + ", address=" + address
+                +"]";
     }
+    
+
 }

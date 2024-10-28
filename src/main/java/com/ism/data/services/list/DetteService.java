@@ -53,5 +53,12 @@ public class DetteService implements DetteServiceI{
     public List<Dette> getByType(TypeDette type) {
        return repo.selectByType(type);
     }
+
+
+    public boolean update(Dette dette) {
+        return repo.update(dette);
+
+    }
+    
     
 }

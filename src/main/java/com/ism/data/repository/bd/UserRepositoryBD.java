@@ -94,20 +94,10 @@ public class UserRepositoryBD extends RepositoryBDImpl<User> implements UserRepo
         return users;
     }
 
-    // @Override
-    // public User selectLogin(String login) {
-    //     return selectUser("login", login);
-    // }
-
     @Override
     public User selectByUserEtat(boolean etat) {
         return selectUser("actif", String.valueOf(etat));
     }
-
-    // @Override
-    // public User selectByEmail(String email) {
-    //     return selectUser("email", email);
-    // }
 
     private User selectUser(String column, String value) {
         User user = null;
@@ -148,7 +138,7 @@ public class UserRepositoryBD extends RepositoryBDImpl<User> implements UserRepo
     @Override
         public User selectByLogin(String login) {
             User user = null;
-            String query = String.format("SELECT * FROM \"%s\" WHERE email = ?", this.tableName);
+            String query = String.format("SELECT * FROM \"%s\" WHERE login = ?", this.tableName);
             System.out.println("Requête exécutée : " + query);
             try (Connection conn = connexion();
                  PreparedStatement ps = conn.prepareStatement(query)) {

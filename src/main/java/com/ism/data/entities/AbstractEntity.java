@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -17,20 +16,12 @@ import lombok.Data;
 public class AbstractEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-   
-    @Transient
-    private static int cpt;
-
-    public AbstractEntity() {
-        this.id = cpt++;
-    }
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected int id;
 
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }

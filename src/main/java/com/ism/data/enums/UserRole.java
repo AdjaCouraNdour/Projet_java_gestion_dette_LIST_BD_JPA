@@ -1,7 +1,7 @@
 package com.ism.data.enums;
 
 public enum UserRole {
-    Boutiquier,Admin;
+    Boutiquier,Admin,Client;
 
     public static UserRole getUserRole(String value) {
         for (UserRole userRole : UserRole.values()) {

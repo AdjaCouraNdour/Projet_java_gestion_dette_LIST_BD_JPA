@@ -11,5 +11,5 @@ public interface DetteRepositoryI extends Repository<Dette> {
      Dette selectById(int id) ;
      Dette selectBy(TypeDette type) ;
      List<Dette> selectByType(TypeDette type);
-    
+     boolean update(Dette dette);
 }

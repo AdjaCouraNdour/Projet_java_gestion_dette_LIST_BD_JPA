@@ -5,15 +5,20 @@ import java.util.Scanner;
 
 import com.ism.core.view.ViewImpl;
 import com.ism.data.entities.Client;
+// import com.ism.data.entities.User;
 import com.ism.data.services.list.ClientService;
 
 public class ClientView extends ViewImpl<Client> {
 
     private ClientService clientService;
+    // private UserView userView;
 
     public ClientView(Scanner scanner, ClientService clientService) {
         super(scanner);
         this.clientService = clientService;
+        // this.userView = userView;
+
+
     }
 
     @Override
@@ -24,17 +29,14 @@ public class ClientView extends ViewImpl<Client> {
         cl.setPrenom(saisieChamp());
         System.out.println("entre le nom du client");
         cl.setNom(saisieChamp());
-    
-    
         cl.setTelephone(saisieTelephone());
-
         System.out.println("entre l'address du client");
         cl.setAddress(saisieChamp());
+
         return cl;
     }
 
     public Client askClient() {
-        // Vérifier s'il existe des clients
         if (clientService.show().isEmpty()) {
             System.out.println("Il n'y a pas encore de client. Veuillez en créer un d'abord.");
             return null;

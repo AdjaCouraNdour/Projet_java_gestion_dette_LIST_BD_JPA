@@ -18,20 +18,12 @@ public class ArticleService implements ArticleServiceI {
     @Override
     public Article getById(int id) {
         return repo.selectById(id);
-        // repo.selectAll().stream()
-        // .filter(Article -> Article.getId()==id)
-        // .findFirst()
-        // .orElse(null);  
+      
     }
 
     @Override
     public Article getBy(EtatArticle etat) {
-        return repo.selectBy(etat);
-        // repo.selectAll().stream()
-        // .filter(article->article.getEtatArticle().compareTo(etat)==0)
-        // .findAny()
-        // .orElse(null);
-        
+        return repo.selectBy(etat);      
     }
 
     @Override
@@ -69,4 +61,8 @@ public class ArticleService implements ArticleServiceI {
         return  repo.selectByEtat(etat);
     }
     
+    public boolean update(Article article) {
+        return repo.update(article);
+
+    }
 }

@@ -13,8 +13,9 @@ public class RepositoryJPA<T> implements Repository<T> {
     protected String tableName;
     YamlService yamlService ;
 
-    public RepositoryJPA(EntityManager em, Class<T> type) {
+    public RepositoryJPA( Class<T> type) {
         this.type = type;
+        
         if (em == null) {
             yamlService = new YamlServiceImpl();
             Map<String, Object> mapYaml = yamlService.loadYaml();
@@ -28,47 +29,65 @@ public class RepositoryJPA<T> implements Repository<T> {
     @Override
     public boolean insert(T object) {
         boolean success = false;
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
         try {
-            em.getTransaction().begin();
-            em.persist(object);  // Use persist() for new objects
-            em.getTransaction().commit();
+            if (em.contains(object)) {
+                em.merge(object); // L'entité est déjà attachée, donc on utilise merge
+            } else {
+                em.persist(object); // L'entité est nouvelle, donc on la persiste
+            }
+            // em.persist(object); 
+            transaction.commit();
             success = true;
         } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
+            transaction.rollback();
             e.printStackTrace();
-        } finally {
-            // Do not close the EntityManager here if managed externally (e.g., by a service layer)
         }
         return success;
     }
 
     @Override
     public List<T> selectAll() {
-        String entityName = type.getSimpleName();  // Get entity name for dynamic query
+        String entityName = type.getSimpleName();  
         return this.em.createQuery("SELECT u FROM " + entityName + " u", type).getResultList();
     }
 
+
     @Override
-    public void remove(T object) {
+    public T selectById(int id) {
+        T entity = null;
         try {
-            em.getTransaction().begin();
-            T mergedObject = em.merge(object);  // Merge the object if it's detached
-            em.remove(mergedObject);  // Then remove it
-            em.getTransaction().commit();
+            entity = em.find(type, id);  
         } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
             e.printStackTrace();
+        }
+        return entity; 
+    }
+
+    
+    public void close() {
+        if (em != null && em.isOpen()) {
+            em.close();
+        }
+        if (emf != null && emf.isOpen()) {
+            emf.close();
         }
     }
 
     @Override
-    public T selectById(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'selectById'");
+    public void remove(T object) {
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+            T mergedObject = em.merge(object);  
+            em.remove(mergedObject);  
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
-
 }

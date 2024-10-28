@@ -19,17 +19,13 @@ import jakarta.persistence.*;
 public class Article extends AbstractEntity implements Identifiable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Transient
-    private static int cpt = 1 ;
- 
     public Article() {
-        id=++cpt;
         this.reference = String.format("A%06d", id);
     }
-   
+
     @Column(length = 10,unique = true)
     private String reference;
     
@@ -66,7 +62,7 @@ public class Article extends AbstractEntity implements Identifiable {
     @Override
     public String toString() {
         return "Article{" +
-                "id=" + getId() + 
+                "id=" + id + 
                 ", reference='" + reference + 
                 ", libelle='" + libelle + 
                 ", prix=" + prix +

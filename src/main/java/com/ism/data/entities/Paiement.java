@@ -3,26 +3,23 @@ import java.time.LocalDate;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name="paiement")
-@ToString(exclude = "dette")
+// @ToString(exclude = "dette")
 public class Paiement extends AbstractEntity implements Identifiable  {
    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Transient
-    private static int cpt = 1 ;
 
     public Paiement() {
-        id=++cpt;
         date=LocalDate.now();
     } 
+
 
     private LocalDate date;
     
@@ -32,6 +29,11 @@ public class Paiement extends AbstractEntity implements Identifiable  {
     @ManyToOne
     @JoinColumn(name = "dette_id", referencedColumnName = "id")
     private Dette dette;
+
+    @Override
+    public String toString() {
+        return "Paiement [id=" + id + ", date=" + date + ", montant=" + montant + ", dette=" + dette.getId() + "]";
+    }
 
 
 }

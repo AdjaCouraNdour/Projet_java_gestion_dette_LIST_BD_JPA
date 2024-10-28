@@ -29,6 +29,8 @@ public class FactoryRepositoryBD implements FactoryRepository{
         if (clientRepository==null) {  
             return clientRepository = new ClientRepositoryBD();
         }
+        // ((ClientRepositoryBD) clientRepository).setUserRepository(getInstanceRepoUser());
+
         return clientRepository;
     }
 

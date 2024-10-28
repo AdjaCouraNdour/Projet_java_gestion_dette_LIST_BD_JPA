@@ -18,25 +18,20 @@ import com.ism.data.enums.TypeDette;
 public class Dette extends AbstractEntity implements Identifiable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private LocalDate date;
 
-
-    @Transient
-    private static int cpt = 1 ;
-
     public Dette() {
-        id=++cpt;
         date=LocalDate.now();
     }
 
     private double montant;
+
     @Column(name = "montant_verse")
     private double montantVerse;
 
-    @Transient
     @Column(name = "montant_restant")
     private double montantRestant;
     
@@ -105,4 +100,3 @@ public class Dette extends AbstractEntity implements Identifiable {
     
 
 }
-    // this.setMontantRestant(montant-montantVerse);

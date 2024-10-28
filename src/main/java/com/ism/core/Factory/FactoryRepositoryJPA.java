@@ -36,7 +36,7 @@ public class FactoryRepositoryJPA implements FactoryRepository{
 	public ClientRepositoryI getInstanceRepoClient(){
         if (clientRepository==null) {
              em = emf.createEntityManager();
-            clientRepository = new ClientRepositoryJPA(em, Client.class,userRepository);
+            clientRepository = new ClientRepositoryJPA( Client.class );
         }
         return clientRepository;
 
@@ -46,7 +46,7 @@ public class FactoryRepositoryJPA implements FactoryRepository{
     public UserRepositoryI getInstanceRepoUser(){
         if (userRepository==null) {
             em=emf.createEntityManager();
-            userRepository=new UserRepositoryJPA(em,User.class,clientRepository);
+            userRepository=new UserRepositoryJPA(User.class, getInstanceRepoClient());
         }
         return userRepository;
     }   
@@ -55,7 +55,7 @@ public class FactoryRepositoryJPA implements FactoryRepository{
     public ArticleRepositoryI getInstanceRepoArticle(){
         if (articleRepository==null) {
             em=emf.createEntityManager();
-            articleRepository=new ArticleRepositoryJPA(em,Article.class);
+            articleRepository=new ArticleRepositoryJPA(Article.class);
         }
         return articleRepository;
     }  
@@ -64,7 +64,7 @@ public class FactoryRepositoryJPA implements FactoryRepository{
     public DetteRepositoryI getInstanceRepoDette(){
         if (detteRepository==null) {
             em=emf.createEntityManager();
-            detteRepository=new DetteRepositoryJPA(em,Dette.class);    
+            detteRepository=new DetteRepositoryJPA(Dette.class);    
             }
         return detteRepository;
     }   
@@ -73,7 +73,8 @@ public class FactoryRepositoryJPA implements FactoryRepository{
     public PaiementRepositoryI getInstanceRepoPaiement(){
         if (paiementRepository==null) {
             em=emf.createEntityManager();
-            paiementRepository=new PaiementRepositoryJPA(em,Paiement.class);        }
+            paiementRepository=new PaiementRepositoryJPA(Paiement.class);       
+        }
         return paiementRepository;
     } 
       
@@ -81,7 +82,8 @@ public class FactoryRepositoryJPA implements FactoryRepository{
     public DetailsRepositoryI getInstanceRepoDetails(){
         if (detailsRepository==null) {
             em=emf.createEntityManager();
-            detailsRepository =new DetailsRepositoryJPA(em,Details.class);        }
+            detailsRepository =new DetailsRepositoryJPA(Details.class);       
+         }
         return detailsRepository;
     }  
 

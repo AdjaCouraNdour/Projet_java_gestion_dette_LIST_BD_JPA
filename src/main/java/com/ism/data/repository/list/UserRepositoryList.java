@@ -8,22 +8,32 @@ import com.ism.data.enums.UserRole;
 import com.ism.data.repository.interfaces.UserRepositoryI;
 
 public class UserRepositoryList extends RepositoryImpl<User> implements UserRepositoryI {
+    private int lastId = 0;
+    public boolean insert(User object) {
+        object.setId(++lastId);
+        super.insert(object);
+        return true;
+    }
 
     public User selectBy(UserRole role) {
-        return
-        list.stream()
-        .filter(user -> user.getUserRole()==role)
-        .findAny()
-        .orElse(null);
+        if (role == null) {
+            return null; 
+        }
+        return list.stream()
+                   .filter(user -> user.getUserRole() != null && user.getUserRole() == role)
+                   .findFirst()
+                   .orElse(null);
     }
 
     @Override
     public User selectByLogin(String login) {
-        return
-        list.stream()
-        .filter(user -> user.getLogin().compareTo(login)==0)
-        .findFirst()
-        .orElse(null);
+        if (login == null) {
+            return null; // Vérification si le login est null
+        }
+        return list.stream()
+                   .filter(user -> user.getLogin() != null && user.getLogin().compareTo(login) == 0)
+                   .findFirst()
+                   .orElse(null);
     }
 
 
@@ -38,18 +48,24 @@ public class UserRepositoryList extends RepositoryImpl<User> implements UserRepo
 
     @Override
     public List<User> selectByRole(UserRole role) {
+        if (role == null) {
+            return List.of(); 
+        }
         return list.stream()
-            .filter(user -> user.getUserRole() == role) 
-            .toList(); 
+                   .filter(user -> user.getUserRole() != null && user.getUserRole() == role)
+                   .toList(); 
     }
+
 
     @Override
     public User selectByEmail(String email) {
-        return
-        list.stream()
-        .filter(user -> user.getEmail().compareTo(email)==0)
-        .findFirst()
-        .orElse(null);
+        if (email == null) {
+            return null; // Vérification si l'email est null
+        }
+        return list.stream()
+                   .filter(user -> user.getEmail() != null && user.getEmail().compareTo(email) == 0)
+                   .findFirst()
+                   .orElse(null);
     }
   
 }

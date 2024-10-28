@@ -8,7 +8,7 @@ import com.ism.data.entities.Identifiable;
 public class RepositoryImpl<T> implements Repository<T> {
 
     protected List<T> list = new ArrayList<>();
-
+    
     @Override
     public boolean insert(T object) {
         return list.add(object);

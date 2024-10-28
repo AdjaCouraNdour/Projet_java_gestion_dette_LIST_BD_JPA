@@ -2,6 +2,7 @@ package com.ism.data.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -10,22 +11,12 @@ import com.ism.data.enums.UserRole;
 @Data
 @EqualsAndHashCode(callSuper = false ,of={"login"})
 @Entity
-@Table(name="user")
+@ToString(exclude = "client")
+@Table(name="\"user\"")
 @NamedQueries({
-   @NamedQuery(name = "selectByLogin",query = "a remplir ")
+   @NamedQuery(name = "selectByLogin",query = "SELECT u FROM User u WHERE u.login = :login")
 })
 public class User extends AbstractEntity implements Identifiable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
-    @Transient
-    private static int cpt = 1 ;
-
-    public User() {
-        this.id = cpt++; 
-    }
     
     @Column(length = 25,unique = true)
     private String email;
@@ -43,9 +34,21 @@ public class User extends AbstractEntity implements Identifiable {
     @Column(nullable = false)
     private boolean actif = true;
         
-    @OneToOne(mappedBy = "client" ,fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "user" ,fetch = FetchType.EAGER )
     @JoinColumn(name = "client_id", nullable = true)
     private Client client;
+
+    public User(String email, String login, String password, UserRole userRole, boolean actif) {
+        this.email = email;
+        this.login = login;
+        this.password = password;
+        this.userRole = userRole;
+        this.actif = actif;
+    }
+
+    public User() {
+    }
+
 
    
 

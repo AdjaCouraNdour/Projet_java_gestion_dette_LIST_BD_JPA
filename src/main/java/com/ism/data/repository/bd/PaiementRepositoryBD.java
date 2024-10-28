@@ -46,7 +46,6 @@ public class PaiementRepositoryBD extends RepositoryBDImpl<Paiement> implements 
         paiement.setDate(rs.getDate("date").toLocalDate());
         paiement.setMontant(rs.getDouble("montant"));
 
-        // Récupérer l'objet Dette à partir de son ID
         int detteId = rs.getInt("dette_id");
         if (detteId > 0) {
             Dette dette = detteRepository.selectById(detteId);
@@ -58,7 +57,7 @@ public class PaiementRepositoryBD extends RepositoryBDImpl<Paiement> implements 
 
     @Override
     protected void setIdFromResultSet(Paiement object, ResultSet rs) throws SQLException {
-        object.setId(rs.getInt(1)); // Récupère l'ID généré par la base de données lors de l'insertion
+        object.setId(rs.getInt(1)); 
     }
 
     @Override
