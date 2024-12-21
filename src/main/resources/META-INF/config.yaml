@@ -1,6 +1,6 @@
 persistence: "POSTGRESQLDETTES"
 
-repo: "RepositoryList"
+repo: "RepositoryBD"
 repositories:
   RepositoryJPA: "com.ism.core.Factory.FactoryRepositoryJPA"
   RepositoryBD: "com.ism.core.Factory.FactoryRepositoryBD"
