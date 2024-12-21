@@ -26,12 +26,13 @@ public class Main {
         ArticleView articleView = new ArticleView(scanner, factoryService.getInstanceArticleService());
         PaiementView paiementView = new PaiementView(scanner, detteView, clientView, factoryService.getInstanceDetteService());
 
-         // creation des utilisateurs A COMMENTER;
-        User userA = new User("admin@gmail.com","AD", "AD",UserRole.Admin,true);
-        factoryService.getInstanceUserService().save(userA);
+        // -----------------------creation des utilisateurs---------------------------
+        //---------------- A DECOMMENTER QUE SI ON UTULISE LA VERSION LIST-------------------
+            // User userA = new User("admin@gmail.com","AD", "AD",UserRole.Admin,true);
+            // factoryService.getInstanceUserService().save(userA);
 
-        User userB = new User("boutiquier@gmail.com","BOU", "BOU",UserRole.Boutiquier,true);
-        factoryService.getInstanceUserService().save(userB);
+            // User userB = new User("boutiquier@gmail.com","BOU", "BOU",UserRole.Boutiquier,true);
+            // factoryService.getInstanceUserService().save(userB);
 
         while (true) {  
 
