@@ -2,7 +2,6 @@ package com.ism;
 
 import java.util.Scanner;
 import com.ism.core.Factory.FactoryService;
-import com.ism.data.entities.Client;
 import com.ism.data.entities.User;
 import com.ism.data.enums.UserRole;
 import com.ism.data.services.list.UserConnect;
@@ -11,7 +10,7 @@ import com.ism.views.ClientView;
 import com.ism.views.DetailsView;
 import com.ism.views.DetteView;
 import com.ism.views.PaiementView;
-import com.ism.views.UserView;
+import com.ism.views.UserView; 
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
