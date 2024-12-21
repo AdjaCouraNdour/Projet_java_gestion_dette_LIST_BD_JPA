@@ -8,8 +8,10 @@ import com.ism.data.entities.Article;
 import com.ism.data.entities.Client;
 import com.ism.data.entities.Details;
 import com.ism.data.entities.Dette;
+import com.ism.data.enums.EtatDette;
 import com.ism.data.enums.TypeDette;
 import com.ism.data.services.list.ArticleService;
+import com.ism.data.services.list.DetailsService;
 import com.ism.data.services.list.DetteService;
 import com.ism.data.services.list.UserConnect;
 
@@ -17,17 +19,19 @@ import com.ism.data.services.list.UserConnect;
 public class DetteView extends ViewImpl<Dette>{
 
     private DetailsView detailsView ;
+    private DetailsService detailsService;
     private DetteService detteService;
     private ClientView clientView;
     private ArticleService articleService;
     
     public DetteView(Scanner scanner, DetailsView detailsView,
-            DetteService detteService,ClientView clientView,ArticleService articleService) {
+            DetteService detteService,ClientView clientView,ArticleService articleService,DetailsService detailsService) {
         super(scanner);
         this.detailsView = detailsView;
         this.detteService = detteService;
         this.clientView = clientView;
         this.articleService = articleService;
+        this.detailsService = detailsService;
 
     }
 
@@ -47,6 +51,7 @@ public class DetteView extends ViewImpl<Dette>{
                 cl.setListeDette(dette); 
                 dette.setClient(cl);          
                 dette.setListeDetails(details); 
+                dette.setEtatDette(EtatDette.EnCours);
                 Article art = details.getArticle();
                 if (details.getQteDette() > art.getQteStock()) {
                     System.out.println("Erreur: La quantité demandée dépasse le stock disponible.");
@@ -174,38 +179,6 @@ public class DetteView extends ViewImpl<Dette>{
         } 
     }
 
-    // public void archiverDetteSolde() {
-    //     Client cl = clientView.askClient();
-    //     if (cl != null) {
-    //         List<Dette> dettesSoldees = detteService.getByType(TypeDette.Solde);
-    //         if (dettesSoldees == null || dettesSoldees.isEmpty()) {
-    //             System.out.println("Il n'y a pas de dettes soldées.");
-    //         } else {
-    //             boolean auMoinsUneDetteArchivée = false;
-    //             for (Dette dette : dettesSoldees) {
-    //                 if (!dette.isArchiver()) {
-    //                     dette.setArchiver(true);
-    //                     boolean update = detteService.update(dette);
-    //                     if (update) {
-    //                         System.out.println("La dette ID " + dette.getId() + " a été archivée avec succès.");
-    //                         auMoinsUneDetteArchivée = true;
-    //                     } else {
-    //                         System.out.println("Erreur lors de l'archivage de la dette ID " + dette.getId() + ".");
-    //                     }
-    //                 } else {
-    //                     System.out.println("La dette ID " + dette.getId() + " est déjà archivée.");
-    //                 }
-    //             }
-    //             if (!auMoinsUneDetteArchivée) {
-    //                 System.out.println("Toutes les dettes soldées étaient déjà archivées.");
-    //             }
-    //         }
-    //     } else {
-    //         System.out.println("Aucun client sélectionné.");
-    //     }
-    // }
-    
-
     public Dette askDette() {
         if (detteService.show().isEmpty()) {
             System.out.println("Il n'y a pas encore de dette. Veuillez en créer un d'abord.");
@@ -213,8 +186,8 @@ public class DetteView extends ViewImpl<Dette>{
         } else {
             Dette dette = null;
             do {
-                System.out.println(detteService.getByType(TypeDette.nonSolde));
-                System.out.println("Veuillez choisir la dette en entrant son ID (ou entrez 0 pour revenir à la liste) :");
+                System.out.println(detteService.show());
+                System.out.println("Veuillez choisir le dette en entrant son ID (ou entrez 0 pour revenir à la liste) :");
     
                 if (scanner.hasNextInt()) {
                     int detteId = scanner.nextInt();
@@ -225,7 +198,7 @@ public class DetteView extends ViewImpl<Dette>{
                     dette = detteService.getById(detteId);
 
                     if (dette == null) {
-                        System.out.println("Cette dette n'existe pas. Veuillez entrer un ID valide.");
+                        System.out.println("Ce dette n'existe pas. Veuillez entrer un ID valide.");
                     }
                 } else {
                     System.out.println("Veuillez entrer un ID valide.");
@@ -237,4 +210,141 @@ public class DetteView extends ViewImpl<Dette>{
             return dette;
         }
     }
+   
+    // Fonction principale pour afficher les dettes en cours et gérer l'interaction utilisateur
+    public void accepterOuRefuserDette() {
+        List<Dette> dettesEnCours = detteService.getByEtat(EtatDette.EnCours);
+        if (dettesEnCours == null || dettesEnCours.isEmpty()) {
+            System.out.println("Il n'y a pas de dettes en cours.");
+            return;
+        }
+
+        System.out.println("Dettes en cours :");
+        for (int i = 0; i < dettesEnCours.size(); i++) {
+            Dette dette = dettesEnCours.get(i);
+            System.out.println((i + 1) + " - Dette ID: " + dette.getId() + ", Montant: " + dette.getMontant()
+                    + ", Client: " + (dette.getClient() != null ? dette.getClient().getNom() : "Inconnu"));
+        }
+
+        System.out.println("Veuillez sélectionner une dette (par numéro) ou 0 pour annuler :");
+        int choix = scanner.nextInt();
+        if (choix == 0) {
+            System.out.println("Opération annulée.");
+        }
+        if (choix < 1 || choix > dettesEnCours.size()) {
+            System.out.println("Choix invalide.");
+        }
+
+        Dette detteChoisie = detteService.getById(dettesEnCours.get(choix - 1).getId());
+        System.out.println("1 - Accepter la dette.");
+        System.out.println("2 - Refuser la dette.");
+        int decision = scanner.nextInt();
+
+        switch (decision) {
+            case 1->{
+                acceptDette(detteChoisie);
+            }
+            case 2->{
+                refuseDette(detteChoisie);
+            }
+
+        }
+    }
+
+    private Dette acceptDette(Dette dette) {
+        dette.setEtatDette(EtatDette.Accepter);
+        if (detteService.update(dette)) {
+            System.out.println("La dette ID " + dette.getId() + " a été acceptée.");
+        } else {
+            System.out.println("Erreur lors de la mise à jour de la dette ID " + dette.getId() + ".");
+        }
+        return dette;
+    }
+
+    private void refuseDette(Dette dette) {
+        dette.setEtatDette(EtatDette.Refuser);
+        if (detteService.update(dette)) {
+            List<Details> detailsList = dette.getListeDetails();
+            if (detailsList != null && !detailsList.isEmpty()) {
+                for (Details detail : detailsList) {
+                    Article article = detail.getArticle();
+                    if (article != null) {
+                        article.setQteStock(article.getQteStock() + detail.getQteDette());
+                        if (articleService.mettreAJour(article)) {
+                            System.out.println("La quantité de l'article ID " + article.getId() + " a été mise à jour.");
+                        } else {
+                            System.out.println("Erreur lors de la mise à jour de l'article ID " + article.getId() + ".");
+                        }
+                    } else {
+                        System.out.println("Aucun article associé trouvé pour le détail ID " + detail.getId() + ".");
+                    }
+                }
+                System.out.println("Tous les détails associés ont été traités pour la dette ID " + dette.getId() + ".");
+            } else {
+                System.out.println("Aucun détail trouvé pour la dette ID " + dette.getId() + ".");
+            }
+            System.out.println("La dette ID " + dette.getId() + " a été refusée.");
+        } else {
+            System.out.println("Erreur lors de la mise à jour de la dette ID " + dette.getId() + ".");
+        }
+    }
+
+    public void afficherMesDettesRefuser() {
+        List<Dette> dette = detteService.getByEtat(EtatDette.Refuser);
+        if (dette == null) {
+            System.out.println("Ce client n'a pas de dettes refuser");
+        } else {
+            for (int i = 0; i < dette.size(); i++) {
+                System.out.println((i + 1) + " - Dette ID: " + dette.get(i).getId() + ", Montant: " + dette.get(i).getMontant()
+                + ", Client: " + (dette.get(i).getClient() != null ? dette.get(i).getClient().getNom() : "Inconnu"));
+            }
+            System.out.println("vouler vous relancer une dette");
+            System.out.println("1 - Oui");
+            System.out.println("2 - Non");
+            int choix = scanner.nextInt();
+            if (choix == 1) {
+                relancerDette();
+            }else if (choix == 2) {
+                System.out.println("Opération annulée.");
+            }
+        }
+    } 
+
+
+    private void relancerDette() {
+        System.out.println("Veuillez sélectionner une dette (par numéro) ou 0 pour annuler :");
+        int choix = scanner.nextInt();
+        if (choix == 0) {
+            System.out.println("Opération annulée.");
+        }
+        Dette dette = detteService.getById(choix);
+        if (dette == null || dette.getEtatDette() != EtatDette.Refuser) {
+            System.out.println("Choix invalide ou aucune dette refusée trouvée pour ce client.");
+        }
+        dette.setEtatDette(EtatDette.EnCours);
+        if (detteService.update(dette)) {
+            List<Details> detailsList = dette.getListeDetails();
+            if (detailsList != null && !detailsList.isEmpty()) {
+                for (Details detail : detailsList) {
+                    Article article = detail.getArticle();
+                    if (article != null) {
+                        article.setQteStock(article.getQteStock() - detail.getQteDette());
+                        if (articleService.mettreAJour(article)) {
+                            System.out.println("La quantité de l'article ID " + article.getId() + " a été mise à jour.");
+                           
+                        } else {
+                            System.out.println("Erreur lors de la mise à jour de l'article ID " + article.getId() + ".");
+                        }
+                    } else { 
+                        System.out.println("Aucun article associé rencontré pour le détail ID " + detail.getId() + ".");
+                    }
+                }
+            } else {
+                System.out.println("Aucun détail associé trouvé pour la dette ID " + dette.getId() + ".");
+            }
+            System.out.println("La dette ID " + dette.getId() + " a été relancée.");
+        } else {
+            System.out.println("Erreur lors de la mise à jour de la dette ID " + dette.getId() + ".");
+        }
+    }    
 }

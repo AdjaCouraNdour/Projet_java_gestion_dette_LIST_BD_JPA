@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ism.core.Repository.RepositoryJPA;
 import com.ism.data.entities.Dette;
+import com.ism.data.enums.EtatDette;
 import com.ism.data.enums.TypeDette;
 import com.ism.data.repository.interfaces.DetteRepositoryI;
 
@@ -79,6 +80,20 @@ public class DetteRepositoryJPA extends RepositoryJPA<Dette> implements DetteRep
             return false;
         }
         return false;
+    }
+
+    @Override
+    public List<Dette> selectByEtat(EtatDette etat) {
+        List<Dette> dettes = null;
+        try {
+            TypedQuery<Dette> query = em.createQuery(
+                "SELECT d FROM Dette d WHERE d.etatDette = :etat", Dette.class);
+            query.setParameter("etat", etat);
+            dettes = query.getResultList();
+        } catch (Exception e) {
+            System.out.println("Erreur lors de la recherche de dettes par etat : " + e.getMessage());
+        }
+        return dettes;
     }
 
 }

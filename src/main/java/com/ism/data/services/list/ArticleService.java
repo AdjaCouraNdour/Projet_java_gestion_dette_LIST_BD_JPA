@@ -47,7 +47,7 @@ public class ArticleService implements ArticleServiceI {
     
             return repo.update(art);  
         }
-        return false; // Retourne false si l'article n'est pas trouvé
+        return false; 
     }
     
 

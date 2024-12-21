@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ism.core.Repository.RepositoryImpl;
 import com.ism.data.entities.Dette;
+import com.ism.data.enums.EtatDette;
 import com.ism.data.enums.TypeDette;
 import com.ism.data.repository.interfaces.DetteRepositoryI;
 
@@ -53,5 +54,15 @@ public class DetteRepositoryList extends RepositoryImpl<Dette> implements DetteR
             }
         }
         return false; 
+    }
+
+    @Override
+    public List<Dette> selectByEtat(EtatDette etat) {
+        if (etat == null) {
+            return List.of(); 
+        }
+        return list.stream()
+                   .filter(dette -> dette.getEtatDette() != null && dette.getEtatDette() == etat)
+                   .toList();
     }
 }

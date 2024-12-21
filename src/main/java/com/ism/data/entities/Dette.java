@@ -9,6 +9,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import org.hibernate.annotations.ColumnDefault;
+
+import com.ism.data.enums.EtatDette;
 import com.ism.data.enums.TypeDette;
 @Data()
 @EqualsAndHashCode(callSuper = false)
@@ -38,6 +40,10 @@ public class Dette extends AbstractEntity implements Identifiable {
     @Enumerated(EnumType.STRING)
     private TypeDette typeDette;
 
+    @Enumerated(EnumType.STRING)
+    private EtatDette etatDette;
+
+
     @ColumnDefault(value = "true")
     private boolean archiver;
 
@@ -55,8 +61,7 @@ public class Dette extends AbstractEntity implements Identifiable {
         details.setDette(this); // Associer le détail à cette dette
         listeDetails.add(details);    
     }
-
-    
+  
     public void setListeDetails(List<Details> details) {
         this.listeDetails.clear();  // On efface d'abord l'ancienne liste
         if (details != null) {

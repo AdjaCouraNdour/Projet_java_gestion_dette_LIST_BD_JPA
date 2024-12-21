@@ -23,17 +23,17 @@ public class Main {
         DetailsView detailsView = new DetailsView(scanner, factoryService.getInstanceArticleService());
         ClientView clientView = new ClientView(scanner, factoryService.getInstanceClientService());
         UserView userView = new UserView(scanner, factoryService.getInstanceClientService(), factoryService.getInstanceUserService(), clientView);
-        DetteView detteView = new DetteView(scanner, detailsView, factoryService.getInstanceDetteService(), clientView, factoryService.getInstanceArticleService());
+        DetteView detteView = new DetteView(scanner, detailsView, factoryService.getInstanceDetteService(), clientView, factoryService.getInstanceArticleService(), factoryService.getInstanceDetailsService());
         ArticleView articleView = new ArticleView(scanner, factoryService.getInstanceArticleService());
         PaiementView paiementView = new PaiementView(scanner, detteView, clientView, factoryService.getInstanceDetteService());
 
 
          // creation des utilisateurs A COMMENTER;
-        // User userA = new User("admin@gmail.com","AD", "AD",UserRole.Admin,true);
-        // factoryService.getInstanceUserService().save(userA);
+        User userA = new User("admin@gmail.com","AD", "AD",UserRole.Admin,true);
+        factoryService.getInstanceUserService().save(userA);
 
-        // User userB = new User("boutiquier@gmail.com","BOU", "BOU",UserRole.Boutiquier,true);
-        // factoryService.getInstanceUserService().save(userB);
+        User userB = new User("boutiquier@gmail.com","BOU", "BOU",UserRole.Boutiquier,true);
+        factoryService.getInstanceUserService().save(userB);
 
         while (true) {  
 
@@ -83,7 +83,8 @@ public class Main {
                                     case 11 -> detteView.listerDetteClient();
                                     case 12 -> factoryService.getInstancePaiementService().save(paiementView.create());
                                     case 13 -> detteView.archiverDetteSolde();
-                                    case 14 -> System.out.println("Quitter");
+                                    case 14 -> detteView.accepterOuRefuserDette();
+                                    case 15-> System.out.println("Quitter");
                                 }
                             } while (choice != 14); 
                         }
@@ -131,10 +132,15 @@ public class Main {
                             do {
                                 c = menuClient();
                                 switch (c) {
-                                    case 1 -> factoryService.getInstanceDetteService().save(detteView.createDette());
+                                    case 1 -> factoryService.getInstanceDetteService().save(detteView.createDette());     
                                     case 2 -> detteView.afficherMesDettes();
-                                    case 3 -> System.out.println("Quitter");
+                                    case 3 -> detteView.afficherMesDettesRefuser();                                          
+                                    case 4 -> {
+                                        System.out.println("Au revoir !");
+                                        return; 
+                                    }
                                 }
+
                             } while (c != 3); 
                         }
                     }
@@ -163,7 +169,8 @@ public class Main {
 
         System.out.println("1 - Faire une dette");
         System.out.println("2 - Lister mes dettes non-soldées ");
-        System.out.println("3 - Quitter");
+        System.out.println("3 - Lister mes dette refuser");
+        System.out.println("4 - Quitter");
         return scanner.nextInt();
     }
 
@@ -181,7 +188,8 @@ public class Main {
         System.out.println("11 - Lister les dettes d'un client");
         System.out.println("12 - Faire un paiement");
         System.out.println("13 - Archiver les dettes soldées d'un client");
-        System.out.println("14 - Quitter");
+        System.out.println("14 - Traiter une dette");
+        System.out.println("15 - Quitter");
         return scanner.nextInt();
     }
 }

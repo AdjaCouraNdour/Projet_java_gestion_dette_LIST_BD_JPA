@@ -12,6 +12,7 @@ import com.ism.data.entities.Client;
 import com.ism.data.entities.Details;
 import com.ism.data.entities.Dette;
 import com.ism.data.entities.Paiement;
+import com.ism.data.enums.EtatDette;
 import com.ism.data.enums.TypeDette;
 import com.ism.data.repository.interfaces.ArticleRepositoryI;
 import com.ism.data.repository.interfaces.ClientRepositoryI;
@@ -49,7 +50,7 @@ public class DetteRepositoryBD extends RepositoryBDImpl<Dette> implements DetteR
 
     @Override
     protected String generateInsertQuery() {
-        return String.format("INSERT INTO %s (montant, montant_verse, montant_restant, type_dette_id, archiver, client_id, date) VALUES (?, ?, ?, ?, ?, ?, ?)", this.tableName);
+        return String.format("INSERT INTO %s (montant, montant_verse, montant_restant, type_dette_id, archiver, client_id, date , etat_dette_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", this.tableName);
     }
 
     @Override
@@ -74,6 +75,8 @@ public class DetteRepositoryBD extends RepositoryBDImpl<Dette> implements DetteR
         } else {
             ps.setNull(7, java.sql.Types.DATE);
         }
+        ps.setInt(8, dette.getEtatDette().ordinal() + 1);
+
     }
 
     private void insertDetails(Connection conn, Dette dette) throws SQLException {
@@ -108,6 +111,7 @@ public class DetteRepositoryBD extends RepositoryBDImpl<Dette> implements DetteR
         dette.setMontantVerse(rs.getDouble("montant_verse"));
         dette.setMontantRestant(rs.getDouble("montant_restant"));
         dette.setTypeDette(TypeDette.getTypeDetteId(rs.getInt("type_dette_id")));
+        dette.setEtatDette(EtatDette.getEtatDetteId(rs.getInt("etat_dette_id")));
         dette.setArchiver(rs.getBoolean("archiver"));
 
         int clientId = rs.getInt("client_id");
@@ -233,7 +237,7 @@ public class DetteRepositoryBD extends RepositoryBDImpl<Dette> implements DetteR
             dette.setTypeDette(TypeDette.Solde);
         }  
         
-        String query = String.format("UPDATE %s SET montant = ?, montant_verse = ?, montant_restant = ?, type_dette_id = ?, archiver = ?, client_id = ?, date = ? WHERE id = ?",
+        String query = String.format("UPDATE %s SET montant = ?, montant_verse = ?, montant_restant = ?, type_dette_id = ?, archiver = ?, client_id = ?, date = ?, etat_dette_id = ? WHERE id = ?",
             this.tableName
         );
         
@@ -248,21 +252,38 @@ public class DetteRepositoryBD extends RepositoryBDImpl<Dette> implements DetteR
             ps.setInt(6, dette.getClient().getId());
             ps.setDate(7, java.sql.Date.valueOf(dette.getDate()));
             ps.setInt(8, dette.getId());  
-    
-            // System.out.println("Executing query: " + query);
-            // System.out.println("Parameters: " + dette.getMontant() + ", " + dette.getMontantVerse() + ", " + dette.getMontantRestant() + ", " +
-            //                    TypeDette.getTypeDetteIdAsInt(dette.getTypeDette()) + ", " + dette.isArchiver() + ", " +
-            //                    dette.getClient().getId() + ", " + dette.getDate() + ", " + dette.getId());
+            ps.setInt(9, EtatDette.getEtatDetteIdAsInt(dette.getEtatDette()));
 
                                
             int affectedRows = ps.executeUpdate();
-            // System.out.println("Affected Rows: " + affectedRows);
             return affectedRows > 0;
     
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public List<Dette> selectByEtat(EtatDette etat) {
+        List<Dette> listeDettes = new ArrayList<>();  
+        try {
+            if (connexion() != null) {
+                PreparedStatement ps = connexion().prepareStatement(String.format("SELECT * FROM %s WHERE etat_dette_id = ?", this.tableName));
+                ps.setInt(1, EtatDette.getEtatDetteIdAsInt(etat));  
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    Dette dette = converToObject(rs);
+                    listeDettes.add(dette);  
+                }
+            } else {
+                System.out.println("Erreur de connexion à la base de données.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de l'exécution de la requête : " + e.getMessage());
+        }
+
+        return listeDettes;  
     }
 
 }

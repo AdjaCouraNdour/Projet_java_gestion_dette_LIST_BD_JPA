@@ -23,7 +23,7 @@ public enum UserRole {
 
     public static int getUserRoleIdAsInt(UserRole role) {
         if (role != null) {
-            return role.ordinal() + 1; // Ou une autre logique pour obtenir l'ID
+            return role.ordinal() + 1; 
         } else {
             throw new IllegalArgumentException("UserRole cannot be null");
         }

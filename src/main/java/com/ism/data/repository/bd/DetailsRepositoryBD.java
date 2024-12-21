@@ -1,13 +1,17 @@
 package com.ism.data.repository.bd;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ism.core.Repository.RepositoryBDImpl;
 import com.ism.data.entities.Article;
 import com.ism.data.entities.Details;
 import com.ism.data.entities.Dette;
+import com.ism.data.enums.EtatDette;
 import com.ism.data.repository.interfaces.ArticleRepositoryI;
 import com.ism.data.repository.interfaces.DetteRepositoryI;
 import com.ism.data.repository.interfaces.DetailsRepositoryI;
@@ -86,5 +90,28 @@ public class DetailsRepositoryBD extends RepositoryBDImpl<Details> implements De
         } catch (SQLException e) {
             System.out.println("Erreur lors de la suppression : " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<Details> selectByDette(int detteId) {
+        List<Details> listeDetails = new ArrayList<>();  
+        try {
+            if (connexion() != null) {
+                PreparedStatement ps = connexion().prepareStatement(String.format("SELECT * FROM %s WHERE dette_id = ?", this.tableName));
+                ps.setInt(1, detteId);  
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    Details Detail = converToObject(rs);
+                    listeDetails.add(Detail);  
+                }
+            } else {
+                System.out.println("Erreur de connexion à la base de données.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de l'exécution de la requête : " + e.getMessage());
+        }
+
+        return listeDetails;
+       
     }
 }

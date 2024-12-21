@@ -3,6 +3,7 @@ package com.ism.data.services.list;
 import java.util.List;
 
 import com.ism.data.entities.Dette;
+import com.ism.data.enums.EtatDette;
 import com.ism.data.enums.TypeDette;
 import com.ism.data.repository.interfaces.DetteRepositoryI;
 import com.ism.data.services.interfaces.DetteServiceI;
@@ -25,8 +26,8 @@ public class DetteService implements DetteServiceI{
     }
 
     @Override
-    public Dette getBy(TypeDette etat) {
-        return repo.selectBy(etat);
+    public Dette getBy(TypeDette type) {
+        return repo.selectBy(type);
         // repo.selectAll().stream()
         // .filter(dette -> dette.getTypeDette().compareTo(etat)==0)
         // .findFirst()
@@ -58,6 +59,11 @@ public class DetteService implements DetteServiceI{
     public boolean update(Dette dette) {
         return repo.update(dette);
 
+    }
+
+    @Override
+    public List<Dette> getByEtat(EtatDette etat) {
+        return repo.selectByEtat(etat);
     }
     
     

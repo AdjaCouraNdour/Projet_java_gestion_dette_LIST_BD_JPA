@@ -23,7 +23,7 @@ public enum TypeDette {
 
    public static int getTypeDetteIdAsInt(TypeDette value) {
          if (value != null) {
-            return value.ordinal() + 1; // Ou une autre logique pour obtenir l'ID
+            return value.ordinal() + 1; 
          } else {
             throw new IllegalArgumentException("TypeDette cannot be null");
          }

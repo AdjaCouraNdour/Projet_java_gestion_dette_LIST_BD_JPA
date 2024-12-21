@@ -8,6 +8,7 @@ import com.ism.data.repository.interfaces.PaiementRepositoryI;
 import com.ism.data.repository.interfaces.UserRepositoryI;
 import com.ism.data.repository.list.ArticleRepositoryList;
 import com.ism.data.repository.list.ClientRepositoryList;
+import com.ism.data.repository.list.DetailsRepositoryList;
 import com.ism.data.repository.list.DetteRepositoryList;
 import com.ism.data.repository.list.PaiementRepositoryList;
 import com.ism.data.repository.list.UserRepositoryList;
@@ -16,6 +17,7 @@ public class FactoryRepositoryList implements FactoryRepository {
          
         private static ClientRepositoryI clientRepository;
         private static UserRepositoryI userRepository;
+        private static DetailsRepositoryI detailsRepository;
         private static ArticleRepositoryI articleRepository=null;
         private static PaiementRepositoryI paiementRepository=null;
         private static DetteRepositoryI detteRepository=null;
@@ -62,8 +64,10 @@ public class FactoryRepositoryList implements FactoryRepository {
         }
         @Override
         public DetailsRepositoryI getInstanceRepoDetails() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getInstanceRepoDetails'");
+            if (detailsRepository==null) {
+                return detailsRepository=new DetailsRepositoryList();
+            }
+            return detailsRepository;
         } 
 }
 
