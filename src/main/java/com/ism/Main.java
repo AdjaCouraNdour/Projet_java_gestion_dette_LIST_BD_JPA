@@ -135,13 +135,11 @@ public class Main {
                                     case 1 -> factoryService.getInstanceDetteService().save(detteView.createDette());     
                                     case 2 -> detteView.afficherMesDettes();
                                     case 3 -> detteView.afficherMesDettesRefuser();                                          
-                                    case 4 -> {
-                                        System.out.println("Au revoir !");
-                                        return; 
-                                    }
+                                    case 4 -> System.out.println("Au revoir !");
+                                    
                                 }
 
-                            } while (c != 3); 
+                            } while (c != 4); 
                         }
                     }
                 }
