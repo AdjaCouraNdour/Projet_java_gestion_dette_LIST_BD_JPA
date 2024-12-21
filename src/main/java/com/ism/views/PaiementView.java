@@ -61,42 +61,5 @@ public class PaiementView extends ViewImpl<Paiement> {
             return pmt;
             } 
         }
-    } 
-
-
-    // public Paiement createPaiement() {
-    //     Paiement pmt=new Paiement();
-    //     Client cl=UserConnect.getUserConnect().getClient();
-        
-    //         Dette dette = detteView.askDette();
-    //         if (dette==null) {
-    //             System.out.println("ce client na pas de dette");
-    //             return null;
-    //         }else{
-    //             int m;
-    //             do {
-    //                 System.out.println("entrer le montant  paiyer");
-    //                 m=scanner.nextInt();
-    //             } while ( m<=0 || m > dette.getMontantRestant());
-    //             dette.setMontantVerse(dette.getMontantVerse()+m);
-    //             pmt.setMontant(m);
-    //             // dette.setMontantRestant(dette.getMontantRestant()-pmt.getMontant());
-    //             dette.setListePaiement(pmt);
-    //             pmt.setDette(dette); 
-                
-    //             if (dette.getMontantRestant() == 0 && dette.getMontantVerse()==dette.getMontant()) {
-    //                 System.out.println("La dette est entièrement remboursée.");
-    //                 dette.setTypeDette(TypeDette.Solde);  
-    //             }
-
-    //             boolean update = detteservice.update(dette);
-    //             if (update) {
-    //                 System.out.println("Paiement et mise à jour de la dette réussis.");
-    //             } else {
-    //                 System.out.println("Erreur lors de la mise à jour de la dette.");
-    //             }
-
-    //             return pmt;
-    //         } 
-    // } 
+    }  
 }
