@@ -19,19 +19,17 @@ import com.ism.data.services.list.UserConnect;
 public class DetteView extends ViewImpl<Dette>{
 
     private DetailsView detailsView ;
-    private DetailsService detailsService;
     private DetteService detteService;
     private ClientView clientView;
     private ArticleService articleService;
     
     public DetteView(Scanner scanner, DetailsView detailsView,
-            DetteService detteService,ClientView clientView,ArticleService articleService,DetailsService detailsService) {
+            DetteService detteService,ClientView clientView,ArticleService articleService) {
         super(scanner);
         this.detailsView = detailsView;
         this.detteService = detteService;
         this.clientView = clientView;
         this.articleService = articleService;
-        this.detailsService = detailsService;
 
     }
 

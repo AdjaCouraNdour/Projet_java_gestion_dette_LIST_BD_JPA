@@ -22,10 +22,9 @@ public class Main {
         DetailsView detailsView = new DetailsView(scanner, factoryService.getInstanceArticleService());
         ClientView clientView = new ClientView(scanner, factoryService.getInstanceClientService());
         UserView userView = new UserView(scanner, factoryService.getInstanceClientService(), factoryService.getInstanceUserService(), clientView);
-        DetteView detteView = new DetteView(scanner, detailsView, factoryService.getInstanceDetteService(), clientView, factoryService.getInstanceArticleService(), factoryService.getInstanceDetailsService());
+        DetteView detteView = new DetteView(scanner, detailsView, factoryService.getInstanceDetteService(), clientView, factoryService.getInstanceArticleService());
         ArticleView articleView = new ArticleView(scanner, factoryService.getInstanceArticleService());
         PaiementView paiementView = new PaiementView(scanner, detteView, clientView, factoryService.getInstanceDetteService());
-
 
          // creation des utilisateurs A COMMENTER;
         User userA = new User("admin@gmail.com","AD", "AD",UserRole.Admin,true);

@@ -7,7 +7,6 @@ import com.ism.data.entities.Dette;
 import com.ism.data.entities.Paiement;
 import com.ism.data.enums.TypeDette;
 import com.ism.data.services.list.DetteService;
-import com.ism.data.services.list.UserConnect;
 
 public class PaiementView extends ViewImpl<Paiement> {
 
