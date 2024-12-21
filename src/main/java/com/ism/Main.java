@@ -86,7 +86,7 @@ public class Main {
                                     case 14 -> detteView.accepterOuRefuserDette();
                                     case 15-> System.out.println("Quitter");
                                 }
-                            } while (choice != 14); 
+                            } while (choice != 15); 
                         }
                         case Admin -> {
                             int choix;
